@@ -20,7 +20,7 @@ def songtimes(sstring,killindex=True):
     times=[[int(''.join(filter(str.isdigit,i if i!='' else '0')))*1000*60**t for (t,i) in enumerate(reversed(q))] for q in timegrab]
     return list(map(sum,times)),titles
 
-def splitytsong(tlist,url,artist='unknown',album='unknown',etags={},ftime=False,):
+def splitytsong(tlist,url,directory,artist='unknown',album='unknown',etags={},ftime=False,):
     cwd=str(Path.cwd())
     ydl_opts = {
     'format': 'bestaudio/best',
@@ -33,7 +33,7 @@ def splitytsong(tlist,url,artist='unknown',album='unknown',etags={},ftime=False,
         os.chdir(tmp)
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
-        foldername=str(Path.home())+'/Musik/{} - {}/'.format(artist,album)
+        foldername=directory+'/{} - {}/'.format(artist,album)
         mseclist,namelist=songtimes(tlist)
         mseclist.append(None)
         song=AudioSegment.from_mp3('splitsong.mp3')
@@ -52,17 +52,22 @@ def main():
 
     parser = argparse.ArgumentParser(description = "Downloads Youtube albums with YoutubeDL")
 
-    parser.add_argument("tracklist", help="Tracklist like popular on youtube.com")
+    parser.add_argument("url", help="Url of the track",)
 
-    parser.add_argument("-d", "--directory", default=str(Path.home())+'/Musik/', help="Folder in which to put the Tracks")
-
+    parser.add_argument("-d", "--directory", default=str(Path.cwd()), help="Output directory")
     parser.add_argument("-i", "--interpret", default="Unkown", help="Interpret/Artist tag for the Album")
-    
     parser.add_argument("-a", "--album", default="Unkown", help="Album name")
+    parser.add_argument("-l", "--tracklist",default=None,help="File with Tracklist like popular on youtube. If not provided uses stdin" )
     
     
     args = parser.parse_args() 
+    if args.tracklist is None:
+        tracklist = str.strip(sys.stdin.read())
+    else:
+        with open(args.tracklist,"r") as tlist:
+            tracklist = tlist.read().strip()
 
-    tracklist=str.strip(sys.stdin.read())
 
-    splitytsong(tracklist,*(sys.argv[1:]))
+
+    splitytsong(tracklist,args.url,str(Path(args.directory)),artist=args.interpret,album=args.album)
+main()
