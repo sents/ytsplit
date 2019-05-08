@@ -80,19 +80,22 @@ def main():
         "-i", "--interpret", default="Unkown", help="Interpret/Artist tag for the Album"
     )
     parser.add_argument("-a", "--album", default="Unkown", help="Album name")
+    parser.add_argument("-f", "--file", default=None, help="Tracklist file")
     parser.add_argument(
         "-l",
         "--tracklist",
         default=None,
-        help="File with Tracklist like popular on youtube. If not provided uses stdin",
+        help="Tracklist like popular on youtube. If not provided uses stdin",
     )
 
     args = parser.parse_args()
-    if args.tracklist is None:
+    if args.tracklist is None and args.file is None:
         tracklist = str.strip(sys.stdin.read())
-    else:
-        with open(args.tracklist, "r") as tlist:
+    elif args.file:
+        with open(args.file, "r") as tlist:
             tracklist = tlist.read().strip()
+    else:
+        tracklist = args.tracklist
 
     splitytsong(
         tracklist,
