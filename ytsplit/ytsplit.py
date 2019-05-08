@@ -59,9 +59,9 @@ def splitytsong(
     tags = {"artist": artist, "album": album}
     tags.update(etags)
     for i, (time, title) in enumerate(zip(mseclist, namelist)):
-        tags.update({"title": name, "track": str(i + 1)})
+        tags.update({"title": title, "track": str(i + 1)})
         song[time[0] : time[1]].export(
-            foldername + str(i + 1) + ". " + name + ".mp3", format="mp3", tags=tags
+            foldername + str(i + 1) + ". " + title + ".mp3", format="mp3", tags=tags
         )
 
 
