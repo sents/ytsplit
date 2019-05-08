@@ -101,3 +101,4 @@ def main():
         artist=args.interpret,
         album=args.album,
     )
+    return 0
