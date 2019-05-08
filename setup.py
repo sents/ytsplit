@@ -22,5 +22,5 @@ setup(
     author_email = 'finn@krein.moe',
     url = 'https://github.com/sents/ytsplit',
     packages = ['ytsplit'],
-    entry_points = { 'console_scripts' : ['ytsplit = ytsplit.ytsplit:main'] }
+    entry_points = { 'console_scripts' : ['ytsplit.py = ytsplit:main'] }
 )
