@@ -71,7 +71,7 @@ def main():
         description="Downloads Youtube albums with YoutubeDL"
     )
 
-    parser.add_argument("url", help="Url of the track")
+    parser.add_argument("url",default=None, nargs="?", help="Url of the track")
 
     parser.add_argument(
         "-d", "--directory", default=str(Path.cwd()), help="Output directory"
@@ -81,6 +81,7 @@ def main():
     )
     parser.add_argument("-a", "--album", default="Unkown", help="Album name")
     parser.add_argument("-f", "--file", default=None, help="Tracklist file")
+    parser.add_argument("-t", "--test", action="store_true", help="Only gives times and songtitle from tracklist. Used to check for errors in parsing the tracklist")
     parser.add_argument(
         "-l",
         "--tracklist",
@@ -89,13 +90,24 @@ def main():
     )
 
     args = parser.parse_args()
+
     if args.tracklist is None and args.file is None:
         tracklist = str.strip(sys.stdin.read())
+        if not tracklist:
+            print("No tracklist provided.")
+            return 1
     elif args.file:
         with open(args.file, "r") as tlist:
             tracklist = tlist.read().strip()
     else:
         tracklist = args.tracklist
+
+    if args.test:
+        mseclist,namelist = songtimes(tracklist)
+        print("\n".join(namelist))
+        return 0
+    elif args.url is None:
+        print("Please provide url to download.")
 
     splitytsong(
         tracklist,
