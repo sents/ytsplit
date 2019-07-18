@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 import youtube_dl
 from pydub import AudioSegment
-import os, sys, re
+import os
+import sys
+import re
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import argparse
@@ -49,7 +51,7 @@ def splitytsong(
         os.chdir(tmp)
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
-        foldername = directory + "/{} - {}/".format(artist, album)
+        foldername = directory + "/{}/{}/".format(artist, album)
         song = AudioSegment.from_mp3("splitsong.mp3")
         os.chdir(cwd)
     try:
@@ -71,7 +73,7 @@ def main():
         description="Downloads Youtube albums with YoutubeDL"
     )
 
-    parser.add_argument("url",default=None, nargs="?", help="Url of the track")
+    parser.add_argument("url", default=None, nargs="?", help="Url of the track")
 
     parser.add_argument(
         "-d", "--directory", default=str(Path.cwd()), help="Output directory"
@@ -81,7 +83,13 @@ def main():
     )
     parser.add_argument("-a", "--album", default="Unkown", help="Album name")
     parser.add_argument("-f", "--file", default=None, help="Tracklist file")
-    parser.add_argument("-t", "--test", action="store_true", help="Only gives times and songtitle from tracklist. Used to check for errors in parsing the tracklist")
+    parser.add_argument(
+        "-t",
+        "--test",
+        action="store_true",
+        help="""Only gives times and songtitle from tracklist.
+        Used to check for errors in parsing the tracklist""",
+    )
     parser.add_argument(
         "-l",
         "--tracklist",
@@ -103,7 +111,7 @@ def main():
         tracklist = args.tracklist
 
     if args.test:
-        mseclist,namelist = songtimes(tracklist)
+        mseclist, namelist = songtimes(tracklist)
         print("\n".join(namelist))
         return 0
     elif args.url is None:
