@@ -18,7 +18,7 @@ setup(
         'Programming Language :: Python :: 3.8',
     ],
     license = 'The Unlicense',
-    install_requires = ['youtube-dl'],
+    install_requires = ['youtube-dl', 'pydub'],
     author = 'sents',
     author_email = 'finn@krein.moe',
     url = 'https://github.com/sents/ytsplit',
